@@ -104,6 +104,10 @@ def remove_tag(user_id, playlist_id):
     db.session.commit()
     return succes_response(playlist.serialize(), 201)
 
+@app.route("/api/tags/<str:tag_name>/")
+def get_playlists_by_tag(tag_name):
+    return success_response({"playlists": [p.serialize() for p in Playlist.query.filter(Playlist.tags.contains(tag_name))]})
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
