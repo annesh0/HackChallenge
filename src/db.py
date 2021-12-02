@@ -8,6 +8,7 @@ class Playlist(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     username = db.Column(db.String, nullable=False)
     tags = db.Column(db.String)
+    name = db.Column(db.String, nullable = False)
     song1 = db.Column(db.String, nullable=False)
     song2 = db.Column(db.String, nullable=False)
     song3 = db.Column(db.String, nullable=False)
@@ -17,6 +18,7 @@ class Playlist(db.Model):
     def __init__(self, **kwargs):
         self.username = kwargs.get("username")
         self.tags =  kwargs.get("tags")
+        self.name = kwargs.get("name")
         self.song1 = kwargs.get("song1")
         self.song2 = kwargs.get("song2")
         self.song3 = kwargs.get("song3")
@@ -27,6 +29,9 @@ class Playlist(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
+            "username": self.username,
+            "tags": self.tags,
+            "name": self.name,
             "song1": self.song1,
             "song2": self.song2,
             "song3": self.song3,

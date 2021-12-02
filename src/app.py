@@ -52,7 +52,7 @@ def create_user():
 @app.route("/api/playlist/", methods=["POST"])
 def create_playlist():
     body = json.loads(request.data)
-    if not body.get("username") or not body.get("song1") or not body.get("song2") or not body.get("song2") \
+    if not body.get("username") or not body.get("song1") or not body.get("song2") or not body.get("song2")
             or not body.get("song3") or not body.get("song4") or not body.get("song5"):
         return failure_response("missing arguments", 400)
     new_playlist = Playlist(username=body.get("username"), song1=body.get("song1"), song2=body.get("song2"),
@@ -61,6 +61,12 @@ def create_playlist():
     db.session.commit()
     return success_response(new_playlist.serialize(), 201)
 
+@app.route("/api/users/<str:playlist_name>/")
+def get_playlist(playlist_name):
+    playlist = Playlist.query.filter(Playlist.name.contains(playlist_name))
+    if playlist is None:
+        return failure_response("playlist not found")
+    return success_response({"playlist": [p.serialize for p in playlist]})
 
 @app.route("/api/users/<int:user_id>/")
 def get_user(user_id):
