@@ -1,6 +1,5 @@
 from db import db
-from db import Course
-from db import Assignment
+from db import Playlist
 from db import User
 
 from flask import Flask
