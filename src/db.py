@@ -38,11 +38,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable = False)
+    email = db.Column(db.String, nullable=False)
     playlists = db.relationship("Playlist", cascade="delete")
 
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
         self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.email = kwarg.get("email")
 
     def serialize(self):
         list = []
@@ -52,6 +56,8 @@ class User(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "netid": self.net_id,
+            "username": self.username,
+            "password": self.password,
+            "email": self.email,
             "playlists": list
         }

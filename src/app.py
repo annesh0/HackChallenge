@@ -37,7 +37,17 @@ def get_playlists():
 def get_all_users():
     return success_response({"users": [u.serialize() for u in User.query.all()]})
 
-@app.route("/api/")
+@app.route("/api/user/", methods=["POST"])
+def create_user():
+    body = json.loads(request.data)
+    if not body.get("username") or not body.get("password") or not body.get("email"):
+        return failure_response("missing arguments", 400)
+    elif len(body.get("password"))<8:
+        return failure_response("Password must be at least 8 characters long", 400)
+    new_user = User(username=body.get("username"), password=body.get("password"), email=body.get("email"))
+    db.session.add(new_user)
+    db.session.commit()
+    return success_response(new_user.serialize,201)
 
 @app.route("/api/playlist/", methods=["POST"])
 def create_playlist():
