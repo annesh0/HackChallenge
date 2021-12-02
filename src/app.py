@@ -52,7 +52,7 @@ def create_user():
 @app.route("/api/playlist/", methods=["POST"])
 def create_playlist():
     body = json.loads(request.data)
-    if not body.get("username") or not body.get("song1") or not body.get("song2") or not body.get("song2")
+    if not body.get("username") or not body.get("song1") or not body.get("song2") or not body.get("song2") \
             or not body.get("song3") or not body.get("song4") or not body.get("song5"):
         return failure_response("missing arguments", 400)
     new_playlist = Playlist(username=body.get("username"), song1=body.get("song1"), song2=body.get("song2"),
@@ -114,6 +114,10 @@ def remove_tag(user_id, playlist_id):
 def get_playlists_by_tag(tag_name):
     return success_response({"playlists": [p.serialize() for p in Playlist.query.filter(Playlist.tags.contains(tag_name))]})
 
+@app.route("/api/<str:username>/")
+def get_user_by_username(username):
+    query = Playlist.query.filter_by(username=username)
+    return success_response({"users": [u.serialize() for u in query]})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
