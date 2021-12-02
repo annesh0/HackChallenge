@@ -60,6 +60,40 @@ def get_user(user_id):
 
     return success_response(user.serialize())
 
+@app.route("/api/users/<int:user_id>/<int:playlist_id>/", methods=["POST"])
+def add_tag(user_id, playlist_id):
+    body = json.loads(request.data)
+    if not body or body.get("tags"):
+        return failure_response("missing arguments", 400)
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return failure_response("user not found")
+    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
+    if not playlist:
+        return failure_response("playlist not found")
+    tagList = ""
+    for tag in body.get("tags"):
+        tagList += tag
+        tagList += "|"
+    playlist.tags += taglist
+    db.session.commit()
+    return succes_response(playlist.serialize(), 201)
+
+@app.route("/api/users/<int:user_id>/<int:playlist_id>/", methods=["REMOVE"])
+def remove_tag(user_id, playlist_id):
+    body = json.loads(request.data)
+    if not body or body.get("tags"):
+        return failure_response("missing arguments", 400)
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return failure_response("user not found")
+    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
+    if not playlist:
+        return failure_response("playlist not found")
+    playlist.tags = ""
+    db.session.commit()
+    return succes_response(playlist.serialize(), 201)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
