@@ -105,7 +105,7 @@ def create_playlist():
     db.session.commit()
     return success_response(new_playlist.serialize(), 201)
 
-@app.route("/api/users/<str:playlist_name>/")
+@app.route("/api/users/<string:playlist_name>/")
 def get_playlist(playlist_name):
     playlist = Playlist.query.filter(Playlist.name.contains(playlist_name))
     if playlist is None:
@@ -154,11 +154,11 @@ def remove_tag(user_id, playlist_id):
     db.session.commit()
     return succes_response(playlist.serialize(), 201)
 
-@app.route("/api/tags/<str:tag_name>/")
+@app.route("/api/tags/<string:tag_name>/")
 def get_playlists_by_tag(tag_name):
     return success_response({"playlists": [p.serialize() for p in Playlist.query.filter(Playlist.tags.contains(tag_name))]})
 
-@app.route("/api/<str:username>/")
+@app.route("/api/<string:username>/")
 def get_user_by_username(username):
     query = Playlist.query.filter_by(username=username)
     return success_response({"users": [u.serialize() for u in query]})
