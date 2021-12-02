@@ -49,6 +49,51 @@ def create_user():
     db.session.commit()
     return success_response(new_user.serialize,201)
 
+@app.route("/api/playlist/add/<int:user_id>/<int:playlist_id>/", methods=["POST"])
+def add_song(user_id,playlist_id):
+    body = json.loads(request.data)
+    if not body:
+        return failure_response("Enter a song",400)
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return failure_response("user not found")
+    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
+    if not playlist:
+        return failure_response("playlist not found")
+    if body.get("song1"):
+        playlist.song1=body.get("song1")
+    if body.get("song2"):
+            playlist.song1 = body.get("song2")
+    if body.get("song3"):
+            playlist.song1 = body.get("song3")
+    if body.get("song4"):
+            playlist.song1 = body.get("song4")
+    if body.get("song5"):
+            playlist.song1 = body.get("song5")
+    return success_response(playlist)
+
+@app.route("/api/playlist/add/<int:user_id>/<int:playlist_id>/<int:remove_id>/", methods=["REMOVE"])
+def remove_song(user_id,playlist_id,remove_id):
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return failure_response("user not found")
+    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
+    if not remove_id>0 and not remove_id<6:
+        return failure_response("Enter a valid song to remove",400)
+    if not playlist:
+        return failure_response("playlist not found")
+    if remove_id==1:
+        playlist.song1=""
+    if remove_id==2:
+        playlist.song2=""
+    if remove_id==3:
+        playlist.song3=""
+    if remove_id==4:
+        playlist.song4=""
+    if remove_id==5:
+        playlist.song5=""
+    return success_response(playlist)
+
 @app.route("/api/playlist/", methods=["POST"])
 def create_playlist():
     body = json.loads(request.data)
