@@ -20,11 +20,14 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
 def success_response(data, code=200):
     return json.dumps(data), code
 
+
 def failure_response(message, code=404):
     return json.dumps({"error": message}), code
+
 
 @app.route("/api/playlists/")
 def get_playlists():
@@ -42,6 +45,16 @@ def create_playlist():
     db.session.add(new_playlist)
     db.session.commit()
     return success_response(new_playlist.serialize(), 201)
+
+
+@app.route("/api/users/<int:user_id>/")
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return failure_response("user not found")
+
+    return success_response(user.serialize())
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
