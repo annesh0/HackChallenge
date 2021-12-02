@@ -33,6 +33,11 @@ def failure_response(message, code=404):
 def get_playlists():
     return success_response({"playlists": [p.serialize() for p in Playlist.query.all()]})
 
+@app.route("/api/users/")
+def get_all_users():
+    return success_response({"users": [u.serialize() for u in User.query.all()]})
+
+@app.route("/api/")
 
 @app.route("/api/playlist/", methods=["POST"])
 def create_playlist():
