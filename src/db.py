@@ -14,16 +14,27 @@ class Playlist(db.Model):
     song3 = db.Column(db.String, nullable=False)
     song4 = db.Column(db.String, nullable=False)
     song5 = db.Column(db.String, nullable=False)
+    artist1 = db.Column(db.String, nullable=False)
+    artist2 = db.Column(db.String, nullable=False)
+    artist3 = db.Column(db.String, nullable=False)
+    artist4 = db.Column(db.String, nullable=False)
+    artist5 = db.Column(db.String, nullable=False)
 
     def __init__(self, **kwargs):
         self.username = kwargs.get("username")
         self.tags =  kwargs.get("tags")
+        self.user_id = kwargs.get("user_id")
         self.name = kwargs.get("name")
         self.song1 = kwargs.get("song1")
         self.song2 = kwargs.get("song2")
         self.song3 = kwargs.get("song3")
         self.song4 = kwargs.get("song4")
         self.song5 = kwargs.get("song5")
+        self.artist1 = kwargs.get("artist1")
+        self.artist2 = kwargs.get("artist2")
+        self.artist3 = kwargs.get("artist3")
+        self.artist4 = kwargs.get("artist4")
+        self.artist5 = kwargs.get("artist5")
 
     def serialize(self):
         return {
@@ -37,6 +48,11 @@ class Playlist(db.Model):
             "song3": self.song3,
             "song4": self.song4,
             "song5": self.song5,
+            "artist1": self.artist1,
+            "artist2": self.artist2,
+            "artist3": self.artist3,
+            "artist4": self.artist4,
+            "artist5": self.artist5,
         }
 
 
@@ -53,12 +69,12 @@ class User(db.Model):
         self.name = kwargs.get("name")
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
-        self.email = kwarg.get("email")
+        self.email = kwargs.get("email")
 
     def serialize(self):
         list = []
         for i in self.playlists:
-            list.append(i.seralize())
+            list.append(i.serialize())
 
         return {
             "id": self.id,
