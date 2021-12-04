@@ -39,9 +39,9 @@ def get_all_users():
 @app.route("/api/users/", methods=["POST"])
 def create_user():
     body = json.loads(request.data)
-    if not body.get("name") or not body.get("username") or not body.get("password") or not body.get("email"):
+    if not body.get("name") or not body.get("username"):
         return failure_response("missing arguments", 400)
-    elif len(body.get("password"))<8:
+    elif body.get("password") and len(body.get("password"))<8:
         return failure_response("Password must be at least 8 characters long", 400)
     new_user = User(name=body.get("name"), username=body.get("username"), password=body.get("password"), email=body.get("email"))
     db.session.add(new_user)

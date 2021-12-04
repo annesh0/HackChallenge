@@ -61,8 +61,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False)
-    password = db.Column(db.String, nullable = False)
-    email = db.Column(db.String, nullable=False)
+    password = db.Column(db.String)
+    email = db.Column(db.String)
     playlists = db.relationship("Playlist", cascade="delete")
 
     def __init__(self, **kwargs):
