@@ -7,7 +7,6 @@ class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     username = db.Column(db.String, nullable=False)
-    tags = db.Column(db.String)
     name = db.Column(db.String, nullable = False)
     song1 = db.Column(db.String, nullable=False)
     song2 = db.Column(db.String, nullable=False)
@@ -22,7 +21,6 @@ class Playlist(db.Model):
 
     def __init__(self, **kwargs):
         self.username = kwargs.get("username")
-        self.tags =  kwargs.get("tags")
         self.user_id = kwargs.get("user_id")
         self.name = kwargs.get("name")
         self.song1 = kwargs.get("song1")
@@ -41,7 +39,6 @@ class Playlist(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "username": self.username,
-            "tags": self.tags,
             "name": self.name,
             "song1": self.song1,
             "song2": self.song2,

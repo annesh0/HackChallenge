@@ -8,6 +8,7 @@ from flask import request
 import json
 import os
 
+
 app = Flask(__name__)
 db_filename = "songs.db"
 
@@ -113,7 +114,7 @@ def create_playlist(user_id):
             or not body.get("song3") or not body.get("song4") or not body.get("song5") or not body.get("artist1") \
             or not body.get("artist2") or not body.get("artist3") or not body.get("artist4") or not body.get("artist5"):
         return failure_response("missing arguments", 400)
-    new_playlist = Playlist(user_id = user_id, name=body.get("name"), tags = "", username = user.serialize().get("username"), song1=body.get("song1"), song2=body.get("song2"),
+    new_playlist = Playlist(user_id = user_id, name=body.get("name"), username = user.serialize().get("username"), song1=body.get("song1"), song2=body.get("song2"),
                             song3=body.get("song3"), song4=body.get("song4"), song5=body.get("song5"), artist1=body.get("artist1"), artist2=body.get("artist2"),
                             artist3=body.get("artist3"), artist4=body.get("artist4"), artist5=body.get("artist5"))
     db.session.add(new_playlist)
@@ -136,43 +137,6 @@ def get_user(user_id):
 
     return success_response(user.serialize())
 
-@app.route("/api/users/<int:user_id>/<int:playlist_id>/", methods=["POST"])
-def add_tag(user_id, playlist_id):
-    body = json.loads(request.data)
-    if not body or not body.get("tags"):
-        return failure_response("missing arguments", 400)
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
-        return failure_response("user not found")
-    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
-    if not playlist:
-        return failure_response("playlist not found")
-    tagList = ""
-    for tag in body.get("tags"):
-        tagList = tagList + tag
-        tagList = tagList + "|"
-    playlist.tags = str(playlist.tags) + tagList
-    db.session.commit()
-    return success_response(playlist.serialize(), 201)
-
-@app.route("/api/users/<int:user_id>/<int:playlist_id>/", methods=["DELETE"])
-def remove_tag(user_id, playlist_id):
-    body = json.loads(request.data)
-    if not body or not body.get("tags"):
-        return failure_response("missing arguments", 400)
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
-        return failure_response("user not found")
-    playlist = Playlist.query.filter_by(id=playlist_id).filter_by(user_id=user_id).first()
-    if not playlist:
-        return failure_response("playlist not found")
-    playlist.tags = ""
-    db.session.commit()
-    return success_response(playlist.serialize(), 201)
-
-@app.route("/api/tags/<string:tag_name>/")
-def get_playlists_by_tag(tag_name):
-    return success_response({"playlists": [p.serialize() for p in Playlist.query.filter(Playlist.tags.contains(tag_name))]})
 
 @app.route("/api/<string:username>/")
 def get_user_by_username(username):
